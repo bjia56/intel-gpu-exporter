@@ -65,6 +65,10 @@ igpu_power_package = Gauge("igpu_power_package", "Package power W")
 
 igpu_rc6 = Gauge("igpu_rc6", "RC6 %")
 
+igpu_engines_busy_max = Gauge(
+    "igpu_engines_busy_max", "Maximum busy utilisation % across all engines"
+)
+
 
 def update(data):
     igpu_engines_blitter_0_busy.set(
@@ -121,6 +125,15 @@ def update(data):
     igpu_power_package.set(data.get("power", {}).get("Package", 0))
 
     igpu_rc6.set(data.get("rc6", {}).get("value", 0))
+
+    # Calculate maximum busy utilization across all engines
+    busy_values = [
+        data.get("engines", {}).get("Blitter/0", {}).get("busy", 0.0),
+        data.get("engines", {}).get("Render/3D/0", {}).get("busy", 0.0),
+        data.get("engines", {}).get("Video/0", {}).get("busy", 0.0),
+        data.get("engines", {}).get("VideoEnhance/0", {}).get("busy", 0.0),
+    ]
+    igpu_engines_busy_max.set(max(busy_values))
 
 
 if __name__ == "__main__":
