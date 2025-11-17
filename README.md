@@ -94,3 +94,19 @@ igpu_power_package 5.480595
 # TYPE igpu_rc6 gauge
 igpu_rc6 99.999993
 ```
+
+
+## Compatibility & Fallback
+
+- Engine key compatibility: supports both legacy (e.g. `Video/0`) and new (`Video`) keys.
+- JSON parsing: robust stream parser for `intel_gpu_top -J`.
+- Optional fallback (off by default):
+  - `FALLBACK_FROM_RC6=1` enables deriving non-idle percent as `100 - rc6` when engine busy reports 0.
+  - `FALLBACK_TARGETS=Video` (default) or comma-separated list: `Video,Render/3D,Blitter,VideoEnhance`.
+
+Example:
+
+```bash
+REFRESH_PERIOD_MS=200 FALLBACK_FROM_RC6=1 FALLBACK_TARGETS=Video \
+  python3 intel-gpu-exporter.py
+```
