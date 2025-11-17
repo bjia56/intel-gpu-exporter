@@ -153,10 +153,10 @@ def update(data):
 
     # Calculate maximum busy utilization across all engines
     busy_values = [
-        data.get("engines", {}).get("Blitter/0", {}).get("busy", 0.0),
-        data.get("engines", {}).get("Render/3D/0", {}).get("busy", 0.0),
-        data.get("engines", {}).get("Video/0", {}).get("busy", 0.0),
-        data.get("engines", {}).get("VideoEnhance/0", {}).get("busy", 0.0),
+        blit_busy,
+        r3d_busy,
+        vid_busy,
+        ven_busy,
     ]
     igpu_engines_busy_max.set(max(busy_values))
 
